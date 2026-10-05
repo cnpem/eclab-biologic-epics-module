@@ -15,6 +15,7 @@ DBD += ECLab.dbd
 
 # specify all source files to be compiled and added to the library
 #ECLab_SRCS += xxx
+ECLab_SRCS += ECLab.cpp
 
 #=============================
 # BioLogic SDK
