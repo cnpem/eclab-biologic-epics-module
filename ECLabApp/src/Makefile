@@ -16,6 +16,18 @@ DBD += ECLab.dbd
 # specify all source files to be compiled and added to the library
 #ECLab_SRCS += xxx
 
+#=============================
+# BioLogic SDK
+
+ifeq ($(OS_CLASS),WIN32)
+    # Windows SDK import library
+    USR_LDFLAGS += /LIBPATH:$(ECLIB_DIR)
+    ECLab_SYS_LIBS += eclib64
+else
+    # Linux SDK installed system-wide
+    ECLab_SYS_LIBS += eclib64
+endif
+
 ECLab_LIBS += $(EPICS_BASE_IOC_LIBS)
 
 #===========================
