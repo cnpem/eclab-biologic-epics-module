@@ -16,6 +16,8 @@ class ECLab : public asynPortDriver {
 public:
   ECLab(const char *portName);
   virtual ~ECLab();
+
+  virtual asynStatus checkError(ErrorCode error_code);
 };
 
 #endif

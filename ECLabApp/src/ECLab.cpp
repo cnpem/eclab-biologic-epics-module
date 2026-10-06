@@ -11,13 +11,34 @@ ECLab::ECLab(const char *portName)
                          asynFloat64ArrayMask |
                          asynEnumMask, /* Interrupt mask */
                      ASYN_CANBLOCK, 1, 0, 0) {
+
+  asynStatus status = asynSuccess;
+
   char lib_version[32];
   size_t lib_version_size = 32;
-  BL_GetLibVersion(lib_version, &lib_version_size);
-  printf("ECLib2 version : %s.\n\n", lib_version);
+  status = checkError(BL_GetLibVersion(lib_version, &lib_version_size));
+  if (status == asynSuccess) {
+    printf("ECLib2 version : %s.\n\n", lib_version);
+  }
 }
 
 ECLab::~ECLab() {}
+
+asynStatus ECLab::checkError(ErrorCode error_code) {
+  const char *functionName = "checkError";
+
+  if (EC_SDK_ERROR_NOERROR != error_code) {
+    char error_msg[1024];
+    BL_GetLastError(error_msg, 1024);
+
+    asynPrint(pasynUserSelf, ASYN_TRACE_ERROR,
+              "%s:%s error code: %d, error message: %s\n", driverName,
+              functionName, error_code, error_msg);
+
+    return asynError;
+  }
+  return asynSuccess;
+}
 
 extern "C" int ECLabDrive(const char *portName) {
   new ECLab(portName);
