@@ -19,8 +19,17 @@ public:
   ECLab(const char *portName, const char *ip, int channel_mask = 1);
   virtual ~ECLab();
 
+  asynStatus writeOctet(asynUser *pasynUser, const char *value, size_t nChars,
+                        size_t *nActual, int *eomReason);
+  asynStatus writeInt32(asynUser *pasynUser, epicsInt32 value);
+
   virtual asynStatus checkError(ErrorCode error_code);
   virtual asynStatus connect(const char *ip, int channel_mask);
+
+protected:
+  int P_IP;
+  int P_CHANNEL_MASK;
+  int P_CONNECT;
 
 private:
   ConnectionHandle connection_handle = NULL;

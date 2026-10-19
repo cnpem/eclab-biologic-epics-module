@@ -11,10 +11,82 @@ ECLab::ECLab(const char *portName, const char *ip, int channel_mask)
                          asynFloat64ArrayMask |
                          asynEnumMask, /* Interrupt mask */
                      ASYN_CANBLOCK, 1, 0, 0) {
-  connect(ip, channel_mask);
+
+  asynStatus status = asynSuccess;
+
+  createParam("IP", asynParamOctet, &P_IP);
+  createParam("CHANNEL_MASK", asynParamInt32, &P_CHANNEL_MASK);
+  createParam("CONNECT", asynParamInt32, &P_CONNECT);
+
+  setStringParam(P_IP, ip);
+  setIntegerParam(P_CHANNEL_MASK, channel_mask);
+
+  status = connect(ip, channel_mask);
+  if (status = asynSuccess) {
+    setIntegerParam(P_CONNECT, 1);
+  }
+
+  callParamCallbacks();
 }
 
 ECLab::~ECLab() { checkError(BL_Disconnect(connection_handle)); }
+
+asynStatus ECLab::writeOctet(asynUser *pasynUser, const char *value,
+                             size_t nChars, size_t *nActual, int *eomReason) {
+  asynStatus status = asynSuccess;
+  const char *functionName = "writeOctet";
+  int function = pasynUser->reason;
+
+  if (function == P_IP) {
+    setStringParam(P_IP, value);
+    *nActual = nChars;
+  }
+
+  /* Do callbacks so higher layers see any changes */
+  callParamCallbacks();
+
+  if (status == asynSuccess)
+    asynPrint(pasynUser, ASYN_TRACEIO_DRIVER, "%s:%s: function=%d, value=%s\n",
+              driverName, functionName, function, value);
+  else
+    asynPrint(pasynUser, ASYN_TRACE_ERROR, "%s:%s: function=%d, value=%s\n",
+              driverName, functionName, function, value);
+
+  return status;
+}
+
+asynStatus ECLab::writeInt32(asynUser *pasynUser, epicsInt32 value) {
+  asynStatus status = asynSuccess;
+  const char *functionName = "writeInt32";
+  int function = pasynUser->reason;
+
+  if (function == P_CONNECT) {
+    if (value) {
+      std::string ip;
+      int channel_mask;
+      getStringParam(P_IP, ip);
+      getIntegerParam(P_CHANNEL_MASK, &channel_mask);
+      status = connect(ip.c_str(), channel_mask);
+    } else {
+      status = checkError(BL_Disconnect(connection_handle));
+    }
+    setIntegerParam(P_CONNECT, value);
+  } else if (function == P_CHANNEL_MASK) {
+    setIntegerParam(P_CHANNEL_MASK, value);
+  }
+
+  /* Do callbacks so higher layers see any changes */
+  callParamCallbacks();
+
+  if (status == asynSuccess)
+    asynPrint(pasynUser, ASYN_TRACEIO_DRIVER, "%s:%s: function=%d, value=%d\n",
+              driverName, functionName, function, value);
+  else
+    asynPrint(pasynUser, ASYN_TRACE_ERROR, "%s:%s: function=%d, value=%d\n",
+              driverName, functionName, function, value);
+
+  return status;
+}
 
 asynStatus ECLab::checkError(ErrorCode error_code) {
   const char *functionName = "checkError";

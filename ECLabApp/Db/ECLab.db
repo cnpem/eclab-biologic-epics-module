@@ -1,0 +1,37 @@
+record(stringout, "${P}${R}IP") {
+    field(DTYP, "asynOctetWrite")
+    field(OUT,  "@asyn(${PORT})IP")
+}
+
+record(stringin, "${P}${R}IP_RBV") {
+    field(DTYP, "asynOctetRead")
+    field(INP,   "@asyn(${PORT})IP")
+    field(SCAN,  "I/O Intr")
+}
+
+record(longout, "${P}${R}CHANNEL_MASK") {
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn(${PORT})CHANNEL_MASK")
+}
+
+record(longin, "${P}${R}CHANNEL_MASK_RBV") {
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn(${PORT})CHANNEL_MASK")
+    field(SCAN, "I/O Intr")
+}
+
+record(bo, "${P}${R}CONNECT") {
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn(${PORT})CONNECT")
+    field(ZNAM, "Disconnect")
+    field(ONAM, "Connect")
+}
+
+record(bi, "${P}${R}CONNECTED_RBV") {
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn(${PORT})CONNECT")
+    field(ZNAM, "Disconnected")
+    field(ONAM, "Connected")
+    field(SCAN, "I/O Intr")
+}
+
