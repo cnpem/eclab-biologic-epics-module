@@ -30,6 +30,11 @@ protected:
   int P_IP;
   int P_CHANNEL_MASK;
   int P_CONNECT;
+  int P_LIB_VERSION;
+  int P_DEVICE_CODE;
+  int P_NUMBER_OF_SLOTS;
+  int P_CHANNEL_PLUGGED;
+  int P_FIRMWARE_STATUS;
 
 private:
   ConnectionHandle connection_handle = NULL;

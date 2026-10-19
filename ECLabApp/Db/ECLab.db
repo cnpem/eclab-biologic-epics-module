@@ -35,3 +35,36 @@ record(bi, "${P}${R}CONNECTED_RBV") {
     field(SCAN, "I/O Intr")
 }
 
+record(stringin, "${P}${R}LIB_VERSION_RBV") {
+    field(DTYP, "asynOctetRead")
+    field(INP,  "@asyn(${PORT})LIB_VERSION")
+    field(SCAN, "I/O Intr")
+}
+
+record(longin, "${P}${R}DEVICE_CODE_RBV") {
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn(${PORT})DEVICE_CODE")
+    field(SCAN, "I/O Intr")
+}
+
+record(longin, "${P}${R}NUMBER_OF_SLOTS_RBV") {
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn(${PORT})NUMBER_OF_SLOTS")
+    field(SCAN, "I/O Intr")
+}
+
+record(waveform, "${P}${R}CHANNEL_PLUGGED_RBV") {
+    field(DTYP, "asynInt32ArrayIn")
+    field(INP, "@asyn(${PORT})CHANNEL_PLUGGED")
+    field(FTVL, "LONG")
+    field(NELM, "16")
+    field(SCAN, "I/O Intr")
+}
+
+record(waveform, "${P}${R}FIRMWARE_STATUS_RBV") {
+    field(DTYP, "asynInt32ArrayIn")
+    field(INP, "@asyn(${PORT})FIRMWARE_STATUS")
+    field(FTVL, "LONG")
+    field(NELM, "16")
+    field(SCAN, "I/O Intr")
+}

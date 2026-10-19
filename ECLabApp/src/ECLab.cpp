@@ -4,11 +4,11 @@ static const char *driverName = "ECLab";
 
 ECLab::ECLab(const char *portName, const char *ip, int channel_mask)
     : asynPortDriver(portName, 1,
-                     asynOctetMask | asynInt32Mask | asynFloat64Mask |
-                         asynFloat64ArrayMask | asynEnumMask |
+                     asynOctetMask | asynInt32Mask | asynInt32ArrayMask |
+                         asynFloat64Mask | asynFloat64ArrayMask | asynEnumMask |
                          asynDrvUserMask, /* Interface mask */
-                     asynOctetMask | asynInt32Mask | asynFloat64Mask |
-                         asynFloat64ArrayMask |
+                     asynOctetMask | asynInt32Mask | asynInt32ArrayMask |
+                         asynFloat64Mask | asynFloat64ArrayMask |
                          asynEnumMask, /* Interrupt mask */
                      ASYN_CANBLOCK, 1, 0, 0) {
 
@@ -17,6 +17,11 @@ ECLab::ECLab(const char *portName, const char *ip, int channel_mask)
   createParam("IP", asynParamOctet, &P_IP);
   createParam("CHANNEL_MASK", asynParamInt32, &P_CHANNEL_MASK);
   createParam("CONNECT", asynParamInt32, &P_CONNECT);
+  createParam("LIB_VERSION", asynParamOctet, &P_LIB_VERSION);
+  createParam("DEVICE_CODE", asynParamInt32, &P_DEVICE_CODE);
+  createParam("NUMBER_OF_SLOTS", asynParamInt32, &P_NUMBER_OF_SLOTS);
+  createParam("CHANNEL_PLUGGED", asynParamInt32, &P_CHANNEL_PLUGGED);
+  createParam("FIRMWARE_STATUS", asynParamInt32, &P_FIRMWARE_STATUS);
 
   setStringParam(P_IP, ip);
   setIntegerParam(P_CHANNEL_MASK, channel_mask);
@@ -112,7 +117,7 @@ asynStatus ECLab::connect(const char *ip, int channel_mask) {
   size_t lib_version_size = 32;
   status = checkError(BL_GetLibVersion(lib_version, &lib_version_size));
   if (status == asynSuccess) {
-    printf("ECLib2 version : %s.\n\n", lib_version);
+    setStringParam(P_LIB_VERSION, lib_version);
   }
 
   if(connection_handle != NULL) {
@@ -121,13 +126,14 @@ asynStatus ECLab::connect(const char *ip, int channel_mask) {
   status = checkError(BL_Connect(ip, COMMUNICATION_TIMEOUT_IN_S,
                                  &connection_handle, &device_info));
   if (status == asynSuccess) {
-    printf("Device Infos :\n");
-    printf("\tdevice_code         = %d\n", device_info.device_code);
-    printf("\tnumber_of_slots     = %d\n", device_info.number_of_slots);
+    setIntegerParam(P_DEVICE_CODE, device_info.device_code);
+    setIntegerParam(P_NUMBER_OF_SLOTS, device_info.number_of_slots);
+    epicsInt32 channelPlugged_[MAX_NUMBER_OF_CHANNELS] = {};
     for (int channel = 0; channel < device_info.number_of_slots; channel++) {
-      printf("\tchannels %d is %s\n", channel,
-             device_info.channels_plugged[channel] ? "plugged" : "unplugged");
+      channelPlugged_[channel] = device_info.channels_plugged[channel] ? 1 : 0;
     }
+    doCallbacksInt32Array(channelPlugged_, MAX_NUMBER_OF_CHANNELS,
+                          P_CHANNEL_PLUGGED, 0);
   }
 
   bool load_fw_mask[MAX_NUMBER_OF_CHANNELS] = {};
@@ -141,17 +147,17 @@ asynStatus ECLab::connect(const char *ip, int channel_mask) {
                                       load_fw_results));
 
   if (status == asynSuccess) {
+    epicsInt32 firmwareStatus_[MAX_NUMBER_OF_CHANNELS] = {};
     for (size_t channel = 0; channel < MAX_NUMBER_OF_CHANNELS; channel++) {
-      if (load_fw_mask[channel] &&
-          load_fw_results[channel] == EC_SDK_ERROR_NOERROR) {
-        printf("\tFirmware successfully loaded on channel %d\n", channel);
-      } else {
-        printf(
-            "ERROR: failed to load firmware on channel %d with error code %d\n",
-            channel, load_fw_results[channel]);
-      }
+      firmwareStatus_[channel] =
+          static_cast<epicsInt32>(load_fw_results[channel]);
     }
+    doCallbacksInt32Array(firmwareStatus_, MAX_NUMBER_OF_CHANNELS,
+                          P_FIRMWARE_STATUS, 0);
   }
+
+  callParamCallbacks();
+
   return status;
 }
 
