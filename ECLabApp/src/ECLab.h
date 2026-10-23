@@ -10,8 +10,11 @@
 #include "asynPortDriver.h"
 
 #include <biologic_ec_sdk/ECLibAPI.h>
+#include <vector>
 
 #define COMMUNICATION_TIMEOUT_IN_S 120
+
+class ECLabTechnique;
 
 class ECLab : public asynPortDriver {
 
@@ -27,6 +30,8 @@ public:
   virtual asynStatus connect(const char *ip, int channel_mask);
   virtual asynStatus createExperiment();
 
+  void registerTechnique(ECLabTechnique *technique);
+
 protected:
   int P_IP;
   int P_CHANNEL_MASK;
@@ -41,6 +46,7 @@ private:
   ConnectionHandle connection_handle = NULL;
   DeviceInfo device_info;
   ExperimentHandle experiment_handle = NULL;
+  std::vector<ECLabTechnique *> techniques_;
 };
 
 #endif

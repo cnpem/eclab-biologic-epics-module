@@ -12,7 +12,9 @@ ECLabTechnique::ECLabTechnique(const char *portName, ECLab *eclab,
                      asynInt32Mask | asynFloat64Mask | asynOctetMask,
                      asynInt32Mask | asynFloat64Mask | asynOctetMask,
                      ASYN_CANBLOCK, 1, 0, 0),
-      eclab_(eclab), techniqueType_(techniqueType) {}
+      eclab_(eclab), techniqueType_(techniqueType) {
+  eclab_->registerTechnique(this);
+}
 
 static asynStatus createTechnique(const char *portName, const char *parentPort,
                                   TechniqueIdentifier techniqueType) {

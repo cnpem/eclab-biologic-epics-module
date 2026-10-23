@@ -1,4 +1,5 @@
 #include "ECLab.h"
+#include "ECLabTechnique.h"
 
 static const char *driverName = "ECLab";
 
@@ -175,6 +176,10 @@ asynStatus ECLab::createExperiment() {
                           EC_SDK_CONNECTION_MODE_STANDARD, &experiment_handle));
 
   return status;
+}
+
+void ECLab::registerTechnique(ECLabTechnique *technique) {
+  techniques_.push_back(technique);
 }
 
 extern "C" int ECLabDrive(const char *portName, const char *ip,
