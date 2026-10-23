@@ -25,6 +25,7 @@ public:
 
   virtual asynStatus checkError(ErrorCode error_code);
   virtual asynStatus connect(const char *ip, int channel_mask);
+  virtual asynStatus createExperiment();
 
 protected:
   int P_IP;
@@ -39,6 +40,7 @@ protected:
 private:
   ConnectionHandle connection_handle = NULL;
   DeviceInfo device_info;
+  ExperimentHandle experiment_handle = NULL;
 };
 
 #endif

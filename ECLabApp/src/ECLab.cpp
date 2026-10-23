@@ -30,6 +30,7 @@ ECLab::ECLab(const char *portName, const char *ip, int channel_mask)
   if (status = asynSuccess) {
     setIntegerParam(P_CONNECT, 1);
   }
+  status = createExperiment();
 
   callParamCallbacks();
 }
@@ -157,6 +158,21 @@ asynStatus ECLab::connect(const char *ip, int channel_mask) {
   }
 
   callParamCallbacks();
+
+  return status;
+}
+
+asynStatus ECLab::createExperiment() {
+  const char *functionName = "createExperiment";
+  asynStatus status = asynSuccess;
+
+  if (experiment_handle != NULL) {
+    status = checkError(BL_DeleteExperiment(experiment_handle));
+  }
+
+  status = checkError(
+      BL_CreateExperiment(device_info, EC_SDK_FLOATING_MODE_FLOATING,
+                          EC_SDK_CONNECTION_MODE_STANDARD, &experiment_handle));
 
   return status;
 }
