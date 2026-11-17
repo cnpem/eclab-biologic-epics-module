@@ -1,0 +1,10 @@
+record(longout, "${P}${R}${TEC}${PARAM}") {
+    field(DTYP, "asynInt32")
+    field(OUT, "@asyn(${PORT})${PARAM}:i")
+}
+
+record(longin, "${P}${R}${TEC}${PARAM}_RBV") {
+    field(DTYP, "asynInt32")
+    field(INP, "@asyn(${PORT})${PARAM}:i")
+    field(SCAN, "I/O Intr")
+}

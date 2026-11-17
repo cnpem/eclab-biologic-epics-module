@@ -1,0 +1,14 @@
+record(waveform, "${P}${R}${TEC}${PARAM}") {
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP, "@asyn(${PORT})${PARAM}:F")
+    field(FTVL, "DOUBLE")
+    field(NELM, "100")
+}
+
+record(waveform, "${P}${R}${TEC}${PARAM}_RBV") {
+    field(DTYP, "asynFloat64ArrayIn")
+    field(INP, "@asyn(${PORT})${PARAM}:F")
+    field(FTVL, "DOUBLE")
+    field(NELM, "100")
+    field(SCAN, "I/O Intr")
+}

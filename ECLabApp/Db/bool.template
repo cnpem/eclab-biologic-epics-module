@@ -1,0 +1,14 @@
+record(bo, "${P}${R}${TEC}${PARAM}") {
+    field(DTYP, "asynInt32")
+    field(OUT, "@asyn(${PORT})${PARAM}:b")
+    field(ZNAM, "False")
+    field(ONAM, "True")
+}
+
+record(bi, "${P}${R}${TEC}${PARAM}_RBV") {
+    field(DTYP, "asynInt32")
+    field(INP, "@asyn(${PORT})${PARAM}:b")
+    field(ZNAM, "False")
+    field(ONAM, "True")
+    field(SCAN, "I/O Intr")
+}

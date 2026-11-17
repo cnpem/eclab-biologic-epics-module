@@ -1,0 +1,10 @@
+record(mbbo, "${P}${R}${TEC}${PARAM}") {
+    field(DTYP, "asynInt32")
+    field(OUT, "@asyn(${PORT})${PARAM}:e")
+}
+
+record(mbbi, "${P}${R}${TEC}${PARAM}_RBV") {
+    field(DTYP, "asynInt32")
+    field(INP, "@asyn(${PORT})${PARAM}:e")
+    field(SCAN, "I/O Intr")
+}

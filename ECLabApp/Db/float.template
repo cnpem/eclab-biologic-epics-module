@@ -1,0 +1,12 @@
+record(ao, "${P}${R}${TEC}${PARAM}") {
+    field(DTYP, "asynFloat64")
+    field(OUT, "@asyn(${PORT})${PARAM}:f")
+    field(PREC, "6")
+}
+
+record(ai, "${P}${R}${TEC}${PARAM}_RBV") {
+    field(DTYP, "asynFloat64")
+    field(INP, "@asyn(${PORT})${PARAM}:f")
+    field(PREC, "6")
+    field(SCAN, "I/O Intr")
+}
