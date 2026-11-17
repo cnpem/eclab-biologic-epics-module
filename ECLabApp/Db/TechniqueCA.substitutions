@@ -1,0 +1,22 @@
+file "floatArray.template" {
+    pattern {PARAM}
+    {"EC_SDK_VOLTAGE_STEP_IN_V"}
+    {"EC_SDK_DURATION_STEP_IN_S"}
+    {"EC_SDK_RECORD_EVERY_DT"}
+    {"EC_SDK_RECORD_EVERY_DI"}
+}
+
+file "int.template" {
+    pattern {PARAM}
+    {"EC_SDK_VS_INITIAL"}
+    {"EC_SDK_STEP_NUMBER"}
+    {"EC_SDK_RECORD_EVERY_DT_MODE"}
+    {"EC_SDK_RECORD_EVERY_DI_MODE"}
+    {"EC_SDK_N_CYCLES"}
+}
+
+file "intArray.template" {
+    pattern {PARAM}
+    {"EC_SDK_GOTO_STEP_DESTINATION"}
+    {"EC_SDK_GOTO_STEP_NUMBER_OF_ITERATIONS"}
+}

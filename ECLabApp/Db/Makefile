@@ -13,6 +13,8 @@ include $(TOP)/configure/CONFIG
 #DB += xxx.db
 DB += ECLab.db
 
+DB += TechniqueCA.db
+
 #----------------------------------------------------
 # If <anyname>.db template is not named <anyname>*.template add
 # <anyname>_template = <templatename>
